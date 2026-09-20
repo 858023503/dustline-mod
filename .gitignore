@@ -1,0 +1,9 @@
+# 编译产物
+bin/
+obj/
+*.pdb
+*.dll
+
+# 反射 dump 的输出（从游戏程序集里提取的内部类型名，不适合公开）
+dump_types.txt
+dump_error.txt
