@@ -92,6 +92,7 @@
 |---|---|
 | `Assist.cs` | **插件本体**（主源码） |
 | `Dump.cs` | 反射 dump 工具：把游戏所有类/方法/字段导出成文本，用来定位该 hook 哪里 |
+| `dump_types.txt` | **dump 的输出结果**（游戏内部类型/方法/字段清单，约 400 KB）。改插件时直接搜这个文件找类名 |
 | `build.ps1` | 编译脚本 |
 | `辅助说明.md` | 详细文档（实现原理、踩过的坑、排查方法） |
 | `screenshots/` | 效果图 |
@@ -100,11 +101,15 @@
 
 游戏大版本更新后类名/方法名可能变动。这时：
 
-1. 用 `Dump.cs` 编译出 dump 插件，放进 `BepInEx\plugins\`
-2. 启动一次游戏，会生成一个类型清单
-3. 对照日志里"找不到 xxx"的提示，在清单里搜新名字，改 `Assist.cs`
+1. 先看 `BepInEx\LogOutput.log` 里有没有"找不到 xxx"的提示，那会告诉你哪个名字失效了
+2. 在 `dump_types.txt` 里搜相近的名字（比如 `Sprea`、`ShotDir`）
+3. 如果变动太大搜不到，就重新生成一份 dump：
+   - 用 `Dump.cs` 编译出 dump 插件，放进 `BepInEx\plugins\`
+   - 启动一次游戏，会在 `D:\cs\_mod\dump_types.txt` 生成新清单（路径写死在 `Dump.cs` 里，按需改）
+4. 改 `Assist.cs` 里对应的名字，跑 `build.ps1` 重新编译
 
-> `Dump.cs` 里的输出路径写死为 `D:\cs\_mod\dump_types.txt`，按需改。
+> `dump_types.txt` 里包含的是**类型名、方法名、字段名**（程序集的元数据），
+> 不含任何游戏代码实现或资源文件。
 
 ---
 
